@@ -24,7 +24,12 @@ public class PanningImageView extends ImageView {
 
 	public PanningImageView (Context context, AttributeSet attr, int defStyle) {
 		super (context, attr, defStyle);
-		readStyleParameters (context, attr);
+		if (isInEditMode()) {
+			// skip initialization in design/edit mode
+			mAttacher = null;
+			return;
+		}
+		readStyleParameters(context, attr);
 		super.setScaleType (ScaleType.MATRIX);
 		mAttacher = new PanningImageViewAttacher (this, mPanningDurationInMs);
 	}
@@ -65,7 +70,6 @@ public class PanningImageView extends ImageView {
 		if (mAttacher != null) {
 			boolean wasPanning = mAttacher.isPanning();
 			mAttacher.stopPanning ();
-			mAttacher.update ();
 			if(wasPanning) mAttacher.startPanning ();
 		}
 	}
